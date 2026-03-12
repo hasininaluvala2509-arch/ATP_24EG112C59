@@ -1,0 +1,110 @@
+### read all user,(requet to protected route)
+GET http://localhost:4000/users-api/users
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiZG8wMEBnbWFpbC5jb20iLCJpYXQiOjE3NzMyOTIxMjYsImV4cCI6MTc3OTM0MDEyNn0.vxwSgfiQW3qfub32FvPY5b-9YPG-cGznQTc8uscGPHs; Path=/; HttpOnly; SameSite=Lax
+###
+POST http://localhost:4000/users-api/users
+Content-Type: application/json
+
+{
+     "username":"vni00",
+     "password":"ab00igh",
+     "email":"abdo00@gmail.com",
+     "age":90
+}
+
+### update user
+PUT http://localhost:4000/users-api/users/69abf10e1d78107ea8efab81
+Content-Type: application/json
+
+{
+   "username":"vni0",
+     "password":"ab0igh",
+     "email":"abdo0@gmail.com",
+     "age":900
+}
+
+###post auth
+POST http://localhost:4000/users-api/auth
+Content-Type: application/json
+
+{
+   "email":"abdo00@gmail.com",
+   "password":"ab00igh"
+}
+
+
+###post auth
+POST http://localhost:4000/users-api/auth
+Content-Type: application/json
+
+{
+   "email":"hasi@gmail.com",
+   "password":"hasi"
+}
+
+
+###adding product to user cart
+PUT http://localhost:4000/users-api/cart/product-id/69b251e6a69a17979ebe12c0
+
+### read all users
+GET http://localhost:4000/users-api/users
+
+### read user by id
+GET http://localhost:4000/users-api/userss
+
+### create user
+POST http://localhost:4000/users-api/users
+Content-Type: application/json
+
+{
+   "username":"hasi",
+   "password":"hasi",
+   "email":"hasi@gmail.com",
+   "age":20
+}
+
+
+
+
+### delete user by id
+DELETE http://localhost:4000/users-api/users/69aa744484078d3e7879d58e
+
+
+### Product request api
+
+//to read data
+GET  http://localhost:5000/product-api/product
+
+###
+// Product document structure
+//      a.productId (required)
+//      b.productName(required)
+//      c.price(required, min price 10000 and max price 50000)
+//      d.brand(required)
+
+POST http://localhost:4000/product-api/product
+Content-Type: application/json
+
+{
+     "productId":"AS125",
+     "productName":"Chocolates",
+     "price":19000,
+     "brand":"Dairy"
+}
+
+###
+GET http://localhost:5000/product-api/product/AS125
+
+###
+POST http://localhost:5000/product-api/product/AS125
+Content-Type: application/json
+
+{
+   "productId":"AS135",
+     "productName":"Chocolate",
+     "price":18000,
+     "brand":"Dairy-Milk"
+}
+
+###
+DELETE http://localhost:5000/product-api/product/AS123
