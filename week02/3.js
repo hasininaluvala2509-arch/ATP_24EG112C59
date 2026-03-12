@@ -1,3 +1,4 @@
+//DAY-03 (class codes)
 let person ={
     name :'ravi',
     age: 19
@@ -134,3 +135,4 @@ catch(err){
 }//error handled cause our application has catch block
 console.log("Second")//not executed due to error in previous line 129
 console.log("third")
+
