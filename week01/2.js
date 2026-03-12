@@ -1,3 +1,4 @@
+//DAY-02 (class codes)
 /*
 //functions are first class objects in js 
 //because it can be stored in var
