@@ -1,3 +1,4 @@
+//DAY-04 (class codes)
 //object literal (obj vth out class in js)
 /*const test ={
     a:10,
@@ -247,4 +248,5 @@ fetch('https://jsonplaceholder.typicode.com/posts')//time req is unpredictable
 //hash a pass
 //creating tokens
 //database / HTTP libraries
+
 //files & stream APIs
