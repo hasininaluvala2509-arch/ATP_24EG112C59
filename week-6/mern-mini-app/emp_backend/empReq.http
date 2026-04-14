@@ -1,0 +1,25 @@
+###
+GET http://localhost:5500/emp/employee
+
+###
+POST http://localhost:5500/emp/employee
+Content-Type: application/json
+
+{
+    "name":"Ravi",
+    "email":"ravi@gmail.com",
+    "mobile":"9874561239",
+    "designation":"ABC",
+    "companyname":"xyz"
+}
+
+###
+PUT http://localhost:5500/emp/employee/69ca27e6be261a747c465c7e
+Content-Type: application/json
+
+{
+    "name":"Ravi Raju"
+}
+
+###
+DELETE http://localhost:5500/emp/employee/69ca2ac8bdbf135b8f5c65d9
