@@ -1,0 +1,95 @@
+*{
+    border:0;
+    padding:0;
+    box-shadow: 0;
+}
+/* nav styles */
+nav{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: rgb(221, 217, 217);
+    align-items: center;
+    padding: 10px;
+}
+nav h2{
+    color: brown;
+}
+nav label{
+    width: 15px;
+    background-color: rgb(249, 109, 109);
+    padding: 2px;
+}
+nav ul{
+    width: 300px;
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+}
+/* main styles */
+.cards{
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+}
+main{
+    /* margin: 25px 20px; */
+    background-color: pink;
+    padding: 10px;
+}
+main h1,h2{
+    text-align: center;
+}
+/* section {
+    border: 2px solid red;
+    
+} */
+main button{
+    color: rgb(45, 15, 72);
+    background-color: rgb(237, 140, 156);
+    padding: 5px;
+}
+section img{
+    width:100%;
+}
+p{
+    margin-bottom: 20px;
+}
+/* footer styles */
+.foot{
+    display: flex;
+    justify-content: space-around;
+}
+footer{
+    background-color:rgb(221, 217, 217);
+
+}
+footer p{
+    width: 50%;
+}
+footer img{
+    width: 19%;
+    border-radius: 50%;
+}
+.tweets{
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 600px){
+    .cards{
+        flex-direction: column;
+        
+    }
+    button{
+        display: none;
+    }
+    
+    .foot{
+        flex-direction: column;
+    }
+    .foot{
+       margin-left: 20px;
+    }
+}

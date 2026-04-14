@@ -1,0 +1,23 @@
+h2{
+    color: rgb(239, 199, 151);
+    text-align: center;
+}
+h5{
+    color: rgb(189, 93, 93);
+}
+hr{
+    color:darkblue;
+    border: 12;
+}
+img{
+    display: block;
+    margin: auto;
+}
+div{
+    margin-bottom: 200px;
+    margin-left: 200px;
+    margin-right: 200px;
+}
+body{
+    color:darkgrey
+}

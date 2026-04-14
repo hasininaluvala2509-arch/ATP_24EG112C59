@@ -1,0 +1,5 @@
+@import "tailwindcss";
+/* global styles*/
+h2{
+  color: darkred;
+}

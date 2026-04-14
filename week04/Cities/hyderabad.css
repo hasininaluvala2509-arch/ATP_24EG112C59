@@ -1,0 +1,28 @@
+h1{
+    text-align: center;
+}
+p{
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size:30px;
+}
+body{
+    background-color: rgb(234, 234, 236);
+
+}
+.img1{
+   
+    float: left;
+    
+}
+.img2{
+   
+    float: right;
+    
+}
+.img3{
+    display: block;
+    margin: auto;
+    float:none;
+    
+}
