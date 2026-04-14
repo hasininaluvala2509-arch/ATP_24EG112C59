@@ -1,0 +1,59 @@
+###register author
+###
+POST http://localhost:4000/auth/users
+Content-Type: application/json
+
+{
+    "firstName":"vasu",
+    "lastName":"",
+    "email":"vasu@gmail.com",
+    "role":"AUTHOR",
+    "password":"vasu"   
+}
+### author login
+POST http://localhost:4000/auth/login
+Content-Type: application/json
+
+{
+    "email":"vasu@gmail.com",
+    "password":"vasu"
+}
+###create article
+POST http://localhost:4000/author-api/article
+Content-Type: application/json
+
+{
+    "author":"69b3c995589f73bdab85df96",
+    "title":"abcdef",
+    "category":"AIIs",
+    "content":"this is AI articles"
+}
+
+### read own article
+GET http://localhost:4000/author-api/articles
+
+###logout
+GET http://localhost:4000/auth/logout
+
+###  edit article
+PUT http://localhost:4000/author-api/article 
+Content-Type: application/json
+
+{
+    "articleId":"69b45056bf79443b1586e495",
+    "title":"abcdefgh",
+    "category":"AI'",
+    "content":"this is AI article'"
+}
+
+
+### soft delete(delete nd restore) andhulo put(full update) , patch(partial update) updates a resource
+PATCH http://localhost:4000/author-api/article 
+Content-Type: application/json
+
+{
+    "articleId":"69b3ab73166a9f1e1fa0b621"
+}
+
+### delete article (hard delete req)
+DELETE http://localhost:4000/author-api/article/69b3cd2cfc48c2c4b4b6cc0a
