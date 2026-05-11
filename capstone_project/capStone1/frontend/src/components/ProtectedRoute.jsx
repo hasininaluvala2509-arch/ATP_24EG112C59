@@ -15,7 +15,9 @@ function ProtectedRoute({ children, allowedRoles }) {
     //redirect to Login
     return <Navigate to="/login" replace />;
   }
-
+   if (!currentUser) {
+    return <Navigate to="/login" replace />;
+  }
   //check roles
   if (allowedRoles && !allowedRoles.includes(currentUser?.role)) {
    
