@@ -20,9 +20,19 @@ app.use(cookieParser())
 
 // ✅ FIXED CORS
 app.use(cors({
-  origin: "https://atp-24-eg-112-c59-qnem-8pzv06u4w.vercel.app",
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "http://localhost:5173",
+      "https://atp-24-eg-112-c59-qnem-8pzv06u4w.vercel.app"
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
-}))
+}));
 
 // routes
 app.use('/user-api', userApp)
