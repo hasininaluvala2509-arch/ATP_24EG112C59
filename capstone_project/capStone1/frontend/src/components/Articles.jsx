@@ -22,6 +22,7 @@ function Articles() {
       try {
         const res = await axios.get("https://atp-24eg112c59.onrender.com/auth/articles");
         setArticles(res.data);
+        withCredentials: true;
       } catch (err) {
         console.log("Error fetching articles:", err);
         setError("Failed to load articles");
