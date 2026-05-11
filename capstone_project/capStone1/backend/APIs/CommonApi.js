@@ -4,142 +4,124 @@ import { hash, compare } from "bcryptjs";
 import { config } from "dotenv";
 import jwt from "jsonwebtoken";
 import { verifyToken } from "../middleware/verifyToken.js";
-const { sign } = jwt;
-export const commonApp = exp.Router();
 import { upload } from "../config/multer.js";
 import { uploadToCloudinary } from "../config/cloudinaryUpload.js";
 import cloudinary from "../config/cloudinary.js";
+
 config();
 
-//Route for register
-commonApp.post("/users", upload.single("profileImageUrl"), async (req, res) => {
-  let cloudinaryResult;
-  try {
-    let allowedRoles = ["USER", "AUTHOR"];
-    //get user from req
-    const newUser = req.body;
-    console.log(newUser);
-    console.log(req.file);
+const { sign } = jwt;
+export const commonApp = exp.Router();
 
-    //check role
-    if (!allowedRoles.includes(newUser.role)) {
-      return res.status(400).json({ message: "Invalid role" });
+// ✅ REGISTER
+commonApp.post(
+  "/users",
+  upload.single("profileImageUrl"),
+  async (req, res, next) => {   // ✅ added next
+    let cloudinaryResult;
+
+    try {
+      let allowedRoles = ["USER", "AUTHOR"];
+      const newUser = req.body;
+
+      if (!allowedRoles.includes(newUser.role)) {
+        return res.status(400).json({ message: "Invalid role" });
+      }
+
+      // upload image
+      if (req.file) {
+        cloudinaryResult = await uploadToCloudinary(req.file.buffer);
+        newUser.profileImageUrl = cloudinaryResult.secure_url;
+      }
+
+      // hash password
+      newUser.password = await hash(newUser.password, 12);
+
+      const newUserDoc = new UserModel(newUser);
+      await newUserDoc.save();
+
+      res.status(201).json({ message: "User created" });
+    } catch (err) {
+      if (cloudinaryResult?.public_id) {
+        await cloudinary.uploader.destroy(cloudinaryResult.public_id);
+      }
+      next(err);
     }
-
-    //Upload image to cloudinary from memoryStorage
-    if (req.file) {
-      cloudinaryResult = await uploadToCloudinary(req.file.buffer);
-    }
-
-    // console.log("cloudinaryResult", cloudinaryResult);
-    //add CDN link(secure_url) of image to newUserObj
-    newUser.profileImageUrl = cloudinaryResult?.secure_url;
-
-    //run validators manually
-    //hash password and replace plain with hashed one
-    newUser.password = await hash(newUser.password, 12);
-
-    //create New user document
-    const newUserDoc = new UserModel(newUser);
-
-    //save document
-    await newUserDoc.save();
-    //send res
-    res.status(201).json({ message: "User created" });
-  } catch (err) {
-    console.log("err is ", err);
-    //delete image from cloudinary
-    if (cloudinaryResult.public_id) {
-      await cloudinary.uploader.destroy(cloudinaryResult.public_id);
-    }
-    next(err);
   }
-});
+);
 
-//Route for Login(USER, AUTHOR and ADMIN)
+// ✅ LOGIN (FIXED COOKIE)
 commonApp.post("/login", async (req, res) => {
-  //console.log(req.body)
-  //get user cred obj
   const { email, password } = req.body;
-  //find user by email
-  const user = await UserModel.findOne({ email: email });
-  //if use not found
+
+  const user = await UserModel.findOne({ email });
+
   if (!user) {
     return res.status(400).json({ message: "Invalid email" });
   }
-  //compare password
+
   const isMatched = await compare(password, user.password);
-  //if passwords not matched
+
   if (!isMatched) {
     return res.status(400).json({ message: "Invalid password" });
   }
-  //create jwt
+
   const signedToken = sign(
     {
       id: user._id,
-      email: email,
+      email: user.email,
       role: user.role,
       firstName: user.firstName,
       lastName: user.lastName,
       profileImageUrl: user.profileImageUrl,
     },
     process.env.SECRET_KEY,
-    {
-      expiresIn: "1h",
-    },
+    { expiresIn: "1h" }
   );
 
-  //set token to res header as httpOnly cookie
+  // ✅ CRITICAL FIX (CROSS-ORIGIN COOKIE)
   res.cookie("token", signedToken, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: true,       // ✅ MUST be true on Render (HTTPS)
+    sameSite: "None",   // ✅ REQUIRED for cross-origin
   });
-  //remove password from user document
+
   let userObj = user.toObject();
   delete userObj.password;
 
-  //send res
-  res.status(200).json({ message: "login success", payload: userObj });
+  res.status(200).json({
+    message: "login success",
+    payload: userObj,
+  });
 });
 
-//Route for Logout
+// ✅ LOGOUT (FIXED)
 commonApp.get("/logout", (req, res) => {
-  //delete token from cookie storage
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: true,
+    sameSite: "None",
   });
-  //send res
+
   res.status(200).json({ message: "Logout success" });
 });
 
-//Page refresh
-commonApp.get("/check-auth", verifyToken("USER", "AUTHOR", "ADMIN"), (req, res) => {
-  res.status(200).json({
-    message: "authenticated",
-    payload: req.user,
-  });
-});
-
-//Change password
-commonApp.put("/password", verifyToken("USER", "AUTHOR", "ADMIN"), async (req, res) => {
-  //check current password and new password are same
-  //get current password of user/admin/author
-  //check the current password of req and user are not same
-  // hash new password
-  //replace current password of user with hashed new password
-  //save
-  //send res
-});
-
-//Public route to get all active articles
-commonApp.get("/articles", async (req, res) => {
+// ✅ CHECK AUTH (SAFE VERSION - NO 401 SPAM)
+commonApp.get("/check-auth", (req, res) => {
   try {
-    const articlesList = await ArticleModel.find({ isArticleActive: true });
-    res.status(200).json({ message: "articles", payload: articlesList });
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(200).json({ payload: null });
+    }
+
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+    res.status(200).json({
+      message: "authenticated",
+      payload: decoded,
+    });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(200).json({ payload: null });
   }
 });
