@@ -17,7 +17,7 @@ function Header() {
   const getProfilePath = () => {
     if (!user) return "/";
 
-    switch (user.role) {
+    switch (user?.role) {
       case "AUTHOR":
         return "/author-profile";
       case "ADMIN":
