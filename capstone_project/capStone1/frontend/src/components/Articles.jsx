@@ -20,7 +20,7 @@ function Articles() {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await axios.get("/auth/articles");
+        const res = await axios.get("https://atp-24eg112c59.onrender.com/auth/articles");
         setArticles(res.data);
       } catch (err) {
         console.log("Error fetching articles:", err);
