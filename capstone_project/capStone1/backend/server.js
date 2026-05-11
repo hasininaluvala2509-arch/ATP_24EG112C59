@@ -16,7 +16,7 @@ app.use(exp.json());
 app.use(cookieParser())
 //add cors middleware
 app.use(cors({
-    origin:["https://atp-24-eg-112-c59-qnem.vercel.app"],
+    origin:"https://atp-24-eg-112-c59-qnem.vercel.app",
     credentials:true//enable to send token back
 }))
 //path level middleware
