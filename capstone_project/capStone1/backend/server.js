@@ -20,7 +20,7 @@ app.use(cookieParser())
 
 // ✅ FIXED CORS
 app.use(cors({
-  origin: "https://atp-24-eg-112-c59-qnem.vercel.app",
+  origin: "https://atp-24-eg-112-c59-qnem-8pzv06u4w.vercel.app",
   credentials: true
 }))
 
