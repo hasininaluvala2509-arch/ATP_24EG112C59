@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import axios from "axios";
-import {toast} from 'react-hot-toast'
+import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router";
 
 import {
@@ -28,25 +28,44 @@ function WriteArticles() {
     reset,
   } = useForm();
 
-  //save article
+  // ✅ Save article
   const submitArticle = async (articleObj) => {
+    // 🔴 Safety check (very important)
+    if (!currentUser?._id) {
+      toast.error("User not authenticated");
+      return;
+    }
+
     setLoading(true);
 
-    //add authorId to articleObj
-    articleObj.author = currentUser._id;
     try {
-      //set loading true
-      setLoading(true);
-      //make POST req to save new article
-      let res = await axios.post("https://atp-24eg112c59.onrender.com/author-api/article", articleObj, { withCredentials: true });
-      //navigate to AuthorArticles
+      // ✅ attach author id
+      const payload = {
+        ...articleObj,
+        author: currentUser._id,
+      };
+
+      const res = await axios.post(
+        "https://atp-24eg112c59.onrender.com/author-api/article",
+        payload,
+        { withCredentials: true }
+      );
+
       if (res.status === 201) {
-        toast.success("Article published successfully")
-        navigate("../articles");
-        // navigate("./author-profile/articles");
+        toast.success("Article published successfully");
+
+        // ✅ reset form after success
+        reset();
+
+        // ✅ correct navigation (relative safe)
+        navigate("/author-profile/articles");
       }
     } catch (err) {
-       toast.error(err.response?.data?.error || "Failed to publish article");
+      console.error("Error publishing article:", err);
+
+      toast.error(
+        err.response?.data?.error || "Failed to publish article"
+      );
     } finally {
       setLoading(false);
     }
@@ -74,7 +93,9 @@ function WriteArticles() {
             })}
           />
 
-          {errors.title && <p className={errorClass}>{errors.title.message}</p>}
+          {errors.title && (
+            <p className={errorClass}>{errors.title.message}</p>
+          )}
         </div>
 
         {/* Category */}
@@ -94,7 +115,9 @@ function WriteArticles() {
             <option value="web-development">Web Development</option>
           </select>
 
-          {errors.category && <p className={errorClass}>{errors.category.message}</p>}
+          {errors.category && (
+            <p className={errorClass}>{errors.category.message}</p>
+          )}
         </div>
 
         {/* Content */}
@@ -114,15 +137,23 @@ function WriteArticles() {
             })}
           />
 
-          {errors.content && <p className={errorClass}>{errors.content.message}</p>}
+          {errors.content && (
+            <p className={errorClass}>{errors.content.message}</p>
+          )}
         </div>
 
         {/* Submit */}
-        <button className={submitBtn} type="submit" disabled={loading}>
+        <button
+          className={submitBtn}
+          type="submit"
+          disabled={loading}
+        >
           {loading ? "Publishing..." : "Publish Article"}
         </button>
 
-        {loading && <p className={loadingClass}>Publishing article...</p>}
+        {loading && (
+          <p className={loadingClass}>Publishing article...</p>
+        )}
       </form>
     </div>
   );
