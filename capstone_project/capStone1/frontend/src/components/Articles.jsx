@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 import {
   pageBackground,
   articleGrid,
@@ -17,12 +18,17 @@ function Articles() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // ✅ SET GLOBAL BASE URL + CREDENTIALS
+  axios.defaults.baseURL = "https://atp-24eg112c59.onrender.com";
+  axios.defaults.withCredentials = true;
+
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await axios.get("https://atp-24eg112c59.onrender.com/auth/articles");
-        setArticles(res.data);
-        withCredentials: true;
+        // ✅ FIXED endpoint
+        const res = await axios.get("/user-api/articles");
+
+        setArticles(res.data.payload); // 🔥 IMPORTANT
       } catch (err) {
         console.log("Error fetching articles:", err);
         setError("Failed to load articles");
@@ -67,15 +73,21 @@ function Articles() {
         ) : (
           <div className={articleGrid}>
             {articles.map((article) => (
-              <div key={article.id} className={articleCardClass}>
+              <div key={article._id} className={articleCardClass}>
                 <h2 className={articleTitle}>{article.title}</h2>
+
                 <p className={articleExcerpt}>
-                  {article.excerpt || article.content?.substring(0, 150) + "..."}
+                  {article.content?.substring(0, 150)}...
                 </p>
+
                 <div className={articleMeta}>
-                  <span>By {article.author?.firstName} {article.author?.lastName}</span>
+                  <span>
+                    By {article.author?.firstName} {article.author?.lastName}
+                  </span>
                   <span>•</span>
-                  <span>{new Date(article.createdAt).toLocaleDateString()}</span>
+                  <span>
+                    {new Date(article.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
             ))}
