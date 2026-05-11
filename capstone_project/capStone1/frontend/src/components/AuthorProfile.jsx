@@ -8,21 +8,21 @@ function AuthorProfile() {
   const logout = useAuth((state) => state.logout);
   const navigate = useNavigate();
 
-  //call this fun on logout
   const onLogout = async () => {
-    //call login route 
-    await logout();
-    //navigate to login component
-    navigate("/login");
+    try {
+      await logout();
+      navigate("/login");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
   };
 
   return (
     <div className={pageWrapper}>
       {/* PROFILE HEADER */}
       <div className="bg-white border border-[#e8e8ed] rounded-3xl p-6 mb-8 shadow-sm flex items-center justify-between">
-        {/* LEFT */}
+        
         <div className="flex items-center gap-4">
-          {/* Avatar */}
           {currentUser?.profileImageUrl ? (
             <img
               src={currentUser.profileImageUrl}
@@ -35,14 +35,14 @@ function AuthorProfile() {
             </div>
           )}
 
-          {/* Name */}
           <div>
             <p className="text-sm text-[#6e6e73]">Welcome back</p>
-            <h2 className="text-xl font-semibold text-[#1d1d1f]">{currentUser?.firstName}</h2>
+            <h2 className="text-xl font-semibold text-[#1d1d1f]">
+              {currentUser?.firstName}
+            </h2>
           </div>
         </div>
 
-        {/* LOGOUT */}
         <button
           className="bg-[#ff3b30] text-white text-sm px-5 py-2 rounded-full hover:bg-[#d62c23] transition"
           onClick={onLogout}
@@ -51,7 +51,7 @@ function AuthorProfile() {
         </button>
       </div>
 
-      {/* NAVIGATION (TABS STYLE) */}
+      {/* NAVIGATION */}
       <div className="flex gap-3 mb-6 bg-[#f5f5f7] p-2 rounded-full w-fit">
         <NavLink
           to="articles"
@@ -78,7 +78,6 @@ function AuthorProfile() {
 
       <div className={divider}></div>
 
-      {/* CONTENT */}
       <div className="mt-6">
         <Outlet />
       </div>
