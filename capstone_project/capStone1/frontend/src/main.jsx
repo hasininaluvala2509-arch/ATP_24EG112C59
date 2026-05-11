@@ -7,6 +7,7 @@ import axios from 'axios'
 // Set base URL for API calls
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 axios.defaults.baseURL = API_BASE_URL;
+axios.defaults.withCredentials = true;
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
