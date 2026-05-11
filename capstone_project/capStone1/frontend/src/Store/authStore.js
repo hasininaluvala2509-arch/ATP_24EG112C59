@@ -62,9 +62,10 @@ export const useAuth = create((set) => ({
       set({ loading: true });
       const res = await axios.get("/auth/check-auth", { withCredentials: true });
 
+      const user = res.data?.payload || null;
       set({
-        currentUser: res.data.payload,
-        isAuthenticated: true,
+        currentUser: user,
+        isAuthenticated: !!user,
         loading: false,
       });
     } catch (err) {
