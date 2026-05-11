@@ -1,8 +1,7 @@
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useEffect } from "react";
 import axios from "axios";
-
 
 import {
   formCard,
@@ -12,15 +11,17 @@ import {
   inputClass,
   submitBtn,
   errorClass,
-  articlePageWrapper,
 } from "../styles/common";
 
 function EditArticle() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { id } = useParams();
 
   const article = location.state;
+
+  // ✅ GLOBAL CONFIG
+  axios.defaults.baseURL = "https://atp-24eg112c59.onrender.com";
+  axios.defaults.withCredentials = true;
 
   const {
     register,
@@ -33,19 +34,27 @@ function EditArticle() {
   useEffect(() => {
     if (!article) return;
 
-     setValue("title", article.title);
-     setValue("category", article.category);
-     setValue("content", article.content);
-  }, [article]);
+    setValue("title", article.title);
+    setValue("category", article.category);
+    setValue("content", article.content);
+  }, [article, setValue]);
 
   const updateArticle = async (modifiedArticle) => {
-    //add articleId to modified article
-    modifiedArticle.article_id=article.article_id
-    //make PUT req to update arrticle
-    let res=await axios.put("https://atp-24eg112c59.onrender.com/author-api/article",modifiedArticle,{withCredentials:true})
-    //navigate to articleById
-    console.log(data);
-   
+    try {
+      // ✅ FIXED ID FIELD
+      modifiedArticle.articleId = article._id;
+
+      const res = await axios.put("/author-api/article", modifiedArticle);
+
+      if (res.status === 200) {
+        // ✅ redirect to article page
+        navigate(`/article/${article._id}`, {
+          state: res.data.payload,
+        });
+      }
+    } catch (err) {
+      console.error("Update failed:", err);
+    }
   };
 
   return (
@@ -53,37 +62,43 @@ function EditArticle() {
       <h2 className={formTitle}>Edit Article</h2>
 
       <form onSubmit={handleSubmit(updateArticle)}>
-        {/* Title */}
+        
         <div className={formGroup}>
           <label className={labelClass}>Title</label>
-
-          <input className={inputClass} {...register("title", { required: "Title required" })} />
-
+          <input
+            className={inputClass}
+            {...register("title", { required: "Title required" })}
+          />
           {errors.title && <p className={errorClass}>{errors.title.message}</p>}
         </div>
 
-        {/* Category */}
         <div className={formGroup}>
           <label className={labelClass}>Category</label>
-
-          <select className={inputClass} {...register("category", { required: "Category required" })}>
+          <select
+            className={inputClass}
+            {...register("category", { required: "Category required" })}
+          >
             <option value="">Select category</option>
             <option value="technology">Technology</option>
             <option value="programming">Programming</option>
             <option value="ai">AI</option>
             <option value="web-development">Web Development</option>
           </select>
-
-          {errors.category && <p className={errorClass}>{errors.category.message}</p>}
+          {errors.category && (
+            <p className={errorClass}>{errors.category.message}</p>
+          )}
         </div>
 
-        {/* Content */}
         <div className={formGroup}>
           <label className={labelClass}>Content</label>
-
-          <textarea rows="14" className={inputClass} {...register("content", { required: "Content required" })} />
-
-          {errors.content && <p className={errorClass}>{errors.content.message}</p>}
+          <textarea
+            rows="14"
+            className={inputClass}
+            {...register("content", { required: "Content required" })}
+          />
+          {errors.content && (
+            <p className={errorClass}>{errors.content.message}</p>
+          )}
         </div>
 
         <button className={submitBtn}>Update Article</button>
