@@ -1,19 +1,19 @@
 import { create } from "zustand";
-import axios from "axios";
+import api from "../api"; // ✅ use centralized axios
 
 export const useAuth = create((set) => ({
   currentUser: null,
   loading: false,
   isAuthenticated: false,
   error: null,
+
+  // 🔐 LOGIN
   login: async (userCred) => {
-    // const { role, ...userCredObj } = userCredWithRole;
     try {
-      //set loading true
       set({ loading: true, currentUser: null, isAuthenticated: false, error: null });
-      //make api call
-      let res = await axios.post("/auth/login", userCred, { withCredentials: true });
-      //update state
+
+      const res = await api.post("/auth/login", userCred);
+
       if (res.status === 200) {
         set({
           currentUser: res.data?.payload,
@@ -23,22 +23,20 @@ export const useAuth = create((set) => ({
         });
       }
     } catch (err) {
-      console.log("err is ", err);
       set({
         loading: false,
         isAuthenticated: false,
         currentUser: null,
-        //error: err,
         error: err.response?.data?.error || "Login failed",
       });
     }
   },
+
+  // 🚪 LOGOUT
   logout: async () => {
     try {
-      //set loading state
-      //make logout api req
-      let res = await axios.get("/auth/logout", { withCredentials: true });
-      //update state
+      const res = await api.get("/auth/logout");
+
       if (res.status === 200) {
         set({
           currentUser: null,
@@ -56,20 +54,22 @@ export const useAuth = create((set) => ({
       });
     }
   },
-  // restore login
+
+  // 🔁 CHECK AUTH
   checkAuth: async () => {
     try {
       set({ loading: true });
-      const res = await axios.get("/auth/check-auth", { withCredentials: true });
+
+      const res = await api.get("/auth/check-auth");
 
       const user = res.data?.payload || null;
+
       set({
         currentUser: user,
         isAuthenticated: !!user,
         loading: false,
       });
     } catch (err) {
-      // If user is not logged in → do nothing
       if (err.response?.status === 401) {
         set({
           currentUser: null,
@@ -79,7 +79,6 @@ export const useAuth = create((set) => ({
         return;
       }
 
-      // other errors
       console.error("Auth check failed:", err);
       set({ loading: false });
     }
