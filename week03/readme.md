@@ -1,46 +1,18 @@
-### Steps to create Backend with Db
-1.Generate package.json 
-2.create express server
-3.Install mongoose and connect to mongodb server
+# Week 03 - Backend API Development
 
-                rest api
-                rest api
+This week focuses on building RESTful APIs using Node.js and Express, integrating MongoDB for data persistence, and implementing security with JWT.
 
-4.To build User Rest API 
-            -CURD operations
-              -Create user 
-              -Read user by id
-              -update by id
-              -delete by id
+## Topics Covered
+- **Express Server**: Setting up a basic web server.
+- **MongoDB Integration**: Using Mongoose to define models and interact with the database.
+- **Authentication**: Implementing user login and token-based authentication (JWT).
+- **Middleware**: Creating custom middleware for token verification and error handling.
+- **Environment Variables**: Managing configurations using `.env`.
 
-5.create schema(structure of doc) and model of resource(User)
-
-6.create user api and define the routes
-
-<!-- user api -->
-<!-- rest api -->
-
--Handling unavailable resources
-400,500 \
-
--validators during update
-runvalidators \
-
--hashing password
-
-encription , decription
-end to end encription(What'sapp)
-hello ---->jdno;idovj wlkjerinvlkm oijkm---->hello
-
-hashing chesthe malli plain text loki radhu
-hello----->xdcfgvhbjnkweoifhn
-irreversable (hashing )
-
-(bcryptjs)\
-
--unique fields
-index\
-
--refined version of error handling middleware
-server ayithe 500 series lo
-client ayithe 400 serie lo ivvali
+## File Descriptions
+- `server.js`: The main entry point for the Express application.
+- `ProductServer.js`: Specific server implementation for product-related APIs.
+- `verifyToken.js`: Middleware for validating JSON Web Tokens.
+- `Api/`: Directory containing various API route definitions.
+- `model/`: Directory containing Mongoose schema definitions.
+- `req.http`: A file containing HTTP requests for testing the API endpoints.
