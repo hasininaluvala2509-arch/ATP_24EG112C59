@@ -27,7 +27,7 @@ function UserProfile() {
       setLoading(true);
       try {
         let res = await axios.get(
-          "http://localhost:5000/user-api/articles",
+          "https://atp-24eg112c59-3.onrender.com/user-api/articles",
           { withCredentials: true }
         );
 

@@ -49,7 +49,7 @@ function ArticleByID() {
 
       try {
         const res = await axios.get(
-          `http://localhost:5000/user-api/articles`,
+          `https://atp-24eg112c59-3.onrender.com/user-api/articles`,
           { withCredentials: true }
         );
 
@@ -83,7 +83,7 @@ function ArticleByID() {
 
     try {
       const res = await axios.patch(
-        `http://localhost:5000/author-api/articles`,
+        `https://atp-24eg112c59-3.onrender.com/author-api/articles`,
         {
           articleId: article._id,
           isArticleActive: newStatus,
@@ -112,7 +112,7 @@ function ArticleByID() {
     commentObj.articleId = article._id;
 
     let res = await axios.put(
-      "http://localhost:5000/user-api/articles",
+      "https://atp-24eg112c59-3.onrender.com/user-api/articles",
       commentObj,
       { withCredentials: true }
     );
