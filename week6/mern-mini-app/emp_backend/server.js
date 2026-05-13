@@ -3,10 +3,14 @@ import cors from 'cors' //to accept req  /cross origin resourse sharing /same or
 const app=exp()
 import {connect} from 'mongoose'
 import { empApp } from './API/empApi.js'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 //add cors middleware
+const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:5173"
 app.use(cors({
-    origin:["http://localhost:5173"]
+    origin:[corsOrigin]
 }))
 //body parser middleware
 app.use(exp.json());
@@ -14,14 +18,16 @@ app.use('/emp',empApp)
 //connect to db
 const connectDB=async()=>{
     try{
-        await connect("mongodb://localhost:27017/emp_backend")
+        const mongoURI = process.env.MONGODB_URI || "mongodb://localhost:27017/emp_backend"
+        await connect(mongoURI)
         console.log("DB connected ");
         //assign port
-        const port=5500
+        const port = process.env.PORT || 5500
         app.listen(port,()=>console.log("server listening on port : ",port))
     }
     catch(err){
         console.log("err in db connection : ",err)
+        process.exit(1)
     }
 }
 

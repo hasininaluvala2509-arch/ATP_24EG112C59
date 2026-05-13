@@ -22,7 +22,8 @@ function EditEmployee() {
     const saveModifiedEmp=async(modifiedEmp)=>{
       console.log(modifiedEmp)
       //make http put req
-      const res= await axios.put(`http://localhost:5500/emp/employee/${state._id}`,modifiedEmp)
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5500"
+      const res= await axios.put(`${apiBaseUrl}/emp/employee/${state._id}`,modifiedEmp)
       
       if(res.status===200){
         //navigate to list of employess

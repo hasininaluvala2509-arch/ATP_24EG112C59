@@ -22,7 +22,8 @@ function CreateEmp() {
       setLoading(true);
       //make HTTP POST req
       console.log(newEmpObj)
-      let res = await fetch("http://localhost:5500/emp/employee", {
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5500"
+      let res = await fetch(`${apiBaseUrl}/emp/employee`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newEmpObj),

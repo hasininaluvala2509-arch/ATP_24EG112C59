@@ -16,7 +16,8 @@ function ListOfEmps() {
   }
 
   const deleteEmpById=async(id)=>{
-    let res= await axios.delete(`http://localhost:5500/emp/employee/${id}`)
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5500"
+    let res= await axios.delete(`${apiBaseUrl}/emp/employee/${id}`)
     if(res.status===200){
       //get latest data
       getEmps();
@@ -25,7 +26,8 @@ function ListOfEmps() {
 
     //get all emps
     async function getEmps() {
-      let res = await axios.get("http://localhost:5500/emp/employee");
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5500"
+      let res = await axios.get(`${apiBaseUrl}/emp/employee`);
       if (res.status === 200) {
         let resObj = res.data
         setEmps(resObj.payload);
