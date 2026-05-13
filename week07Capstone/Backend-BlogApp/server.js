@@ -14,7 +14,7 @@ const app = exp()
 
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://atp-24-eg-112-c59-muil.vercel.app",
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
