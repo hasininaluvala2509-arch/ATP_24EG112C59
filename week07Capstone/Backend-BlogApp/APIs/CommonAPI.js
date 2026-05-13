@@ -22,6 +22,10 @@ commonApp.post('/users', upload.single("profileImageUrl"), async (req, res, next
         const newUser = req.body;
         console.log("Received user data:", newUser);
 
+        // Trim email and password
+        newUser.email = newUser.email.trim().toLowerCase();
+        newUser.password = newUser.password.trim();
+
         // check for the roles : only author and user not admin
         let allowedRoles = ['USER', 'AUTHOR']
         if (!allowedRoles.includes(newUser.role))
@@ -76,14 +80,18 @@ commonApp.post('/login', async (req, res) => {
     // get email and password from the req
     const { email, password } = req.body;
 
+    // Trim email and password
+    const trimmedEmail = email.trim().toLowerCase();
+    const trimmedPassword = password.trim();
+
     // get user details
-    const user = await UserModel.findOne({ email: email })
+    const user = await UserModel.findOne({ email: trimmedEmail })
     if (!user) {
         return res.status(400).json({ message: "Invalid email" });
     }
 
     // compare the password with og password
-    let isMatched = await compare(password, user.password)
+    let isMatched = await compare(trimmedPassword, user.password)
     if (!isMatched) {
         return res.status(400).json({ message: "Incorrect password" });
     }

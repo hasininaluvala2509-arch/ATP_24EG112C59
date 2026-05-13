@@ -32,7 +32,8 @@ const userSchema = new Schema({
 },{
     versionKey:false,
     timestamps:true,
-    strict:"throw"
+    strict:"throw",
+    collation: { locale: 'en', strength: 2 } // Case insensitive
 })
 
 export const UserModel=model("user",userSchema);

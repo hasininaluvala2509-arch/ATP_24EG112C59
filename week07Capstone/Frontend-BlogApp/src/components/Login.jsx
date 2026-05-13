@@ -32,6 +32,9 @@ function LoginComponent() {
   );
 
   const onUserLogin = async (userCredObj) => {
+    // Trim email and password
+    userCredObj.email = userCredObj.email.trim().toLowerCase();
+    userCredObj.password = userCredObj.password.trim();
     await login(userCredObj);
   };
 

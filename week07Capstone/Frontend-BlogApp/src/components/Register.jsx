@@ -31,6 +31,9 @@ const navigate = useNavigate();
   const onUserRegister = async (userObj) => {
     console.log("Form data received:", userObj);
     let {profileImageUrl}=userObj;
+    // Trim email and password
+    userObj.email = userObj.email.trim().toLowerCase();
+    userObj.password = userObj.password.trim();
     // file+ userObj -->FormData
 
     // create formdata obj
