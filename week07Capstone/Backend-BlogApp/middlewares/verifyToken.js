@@ -3,9 +3,12 @@ import { config } from "dotenv";
 config();
 const {verify} = jwt;
 export const verifyToken = ( ...allowedRoles)=>{
+    
     return (req,res,next)=>{
         // token verification logic
     const token = req.cookies?.token;
+    console.log("Authorization Header:", req.headers.authorization);
+    console.log("Token:", token);
     // if token is not valid
     if(!token){
         return res.status(401).json({message:"please login"});
