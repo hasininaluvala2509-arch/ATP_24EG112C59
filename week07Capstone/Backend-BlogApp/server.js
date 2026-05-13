@@ -14,7 +14,23 @@ const app = exp()
 
 
 app.use(cors({
-  origin: "https://atp-24-eg-112-c59-muil.vercel.app",
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Allow production URL and all Vercel preview deployment URLs
+    const allowedPatterns = [
+      "https://atp-24-eg-112-c59-muil.vercel.app",
+    ];
+    const isAllowed = allowedPatterns.includes(origin) ||
+      /^https:\/\/atp-24-eg-112-c59-muil.*\.vercel\.app$/.test(origin);
+    if (isAllowed) {
+      callback(null, origin);
+    } else {
+      console.log("CORS blocked origin:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
