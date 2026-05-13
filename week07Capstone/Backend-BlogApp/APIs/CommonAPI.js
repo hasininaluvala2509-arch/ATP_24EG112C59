@@ -121,7 +121,7 @@ commonApp.post('/login', async (req, res) => {
     const userObj = user.toObject();
     delete userObj.password;
 
-    res.status(200).json({ message: "Login Successful", payload: userObj })
+    res.status(200).json({ message: "Login Successful", payload: userObj, token: signedToken })
 })
 
 // route for logout

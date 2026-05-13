@@ -13,7 +13,7 @@ import {
 import { useForm } from "react-hook-form";
 import { NavLink,useNavigate } from "react-router";
 import { useState } from "react";
-import axios from 'axios'
+import axiosInstance from '../utils/axiosInstance'
 
 function Register() {
   const {
@@ -54,7 +54,7 @@ const navigate = useNavigate();
     try {
       setLoading(true);
       // make http post request to create user in the backend
-      const  res=await axios.post("https://atp-24eg112c59-3.onrender.com/auth/users",formData,{withCredentials:true});
+      const  res=await axiosInstance.post("/auth/users",formData);
 
       console.log("Registration response:", res);
       if(res.status===201){ 

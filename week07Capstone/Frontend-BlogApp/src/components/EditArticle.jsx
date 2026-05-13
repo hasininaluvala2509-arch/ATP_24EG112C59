@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 import {
   formCard,
@@ -42,10 +42,9 @@ function EditArticle() {
 
     modifiedArticle.articleId = article._id;
 
-    let res = await axios.put(
-      "https://atp-24eg112c59-3.onrender.com/author-api/articles",
-      modifiedArticle,
-      { withCredentials: true }
+    let res = await axiosInstance.put(
+      "/author-api/articles",
+      modifiedArticle
     );
 
     if (res.status === 200) {

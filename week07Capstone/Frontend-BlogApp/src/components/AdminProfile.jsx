@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from "react-router";
 import { useAuth } from "../stores/authStore";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { articleTitle } from "../styles/common.js";
 
 function AdminProfile() {
@@ -20,13 +20,12 @@ function AdminProfile() {
 
   const handleToggleStatus = async (userId, currentStatus) => {
     try {
-      await axios.patch(
-        "https://atp-24eg112c59-3.onrender.com/admin-api/users",
+      await axiosInstance.patch(
+        "/admin-api/users",
         {
           userId: userId,
           isUserActive: !currentStatus,
-        },
-        { withCredentials: true }
+        }
       );
 
       setUsers((prev) =>
@@ -43,9 +42,8 @@ function AdminProfile() {
     const getUsers = async () => {
       setLoading(true);
       try {
-        let res = await axios.get(
-          "https://atp-24eg112c59-3.onrender.com/admin-api/users",
-          { withCredentials: true }
+        let res = await axiosInstance.get(
+          "/admin-api/users"
         );
 
         if (res.status === 200) {

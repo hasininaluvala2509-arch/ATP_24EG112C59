@@ -1,6 +1,6 @@
 import { useAuth } from "../stores/authStore";
 import { useNavigate } from "react-router";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { useEffect, useState } from "react";
 
 import {
@@ -26,9 +26,8 @@ function UserProfile() {
     const getArticles = async () => {
       setLoading(true);
       try {
-        let res = await axios.get(
-          "https://atp-24eg112c59-3.onrender.com/user-api/articles",
-          { withCredentials: true }
+        let res = await axiosInstance.get(
+          "/user-api/articles"
         );
 
         if (res.status === 200) {

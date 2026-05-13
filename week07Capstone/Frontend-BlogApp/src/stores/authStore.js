@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 export const useAuth = create((set) => ({
   currentUser: null,
@@ -7,14 +7,17 @@ export const useAuth = create((set) => ({
   isAuthenticated: false,
   error: null,
   login: async (userCred) => {
-    // const { role, ...userCredObj } = userCredWithRole;
     try {
       //set loading true
       set({ loading: true, currentUser: null, isAuthenticated: false, error: null });
       //make api call
-      let res = await axios.post("https://atp-24eg112c59-3.onrender.com/auth/login", userCred, { withCredentials: true });
+      let res = await axiosInstance.post("/auth/login", userCred);
       //update state
       if (res.status === 200) {
+        // Save token to localStorage (cross-domain cookie fallback)
+        if (res.data?.token) {
+          localStorage.setItem("token", res.data.token);
+        }
         set({
           currentUser: res.data?.payload,
           loading: false,
@@ -29,7 +32,7 @@ export const useAuth = create((set) => ({
         isAuthenticated: false,
         currentUser: null,
         //error: err,
-        error: err.response?.data?.error || "Login failed",
+        error: err.response?.data?.message || err.response?.data?.error || "Login failed",
       });
     }
   },
@@ -37,17 +40,19 @@ export const useAuth = create((set) => ({
     try {
       //set loading state
       //make logout api req
-      let res = await axios.get("https://atp-24eg112c59-3.onrender.com/auth/logout", { withCredentials: true });
+      await axiosInstance.get("/auth/logout");
+      // Clear token from localStorage
+      localStorage.removeItem("token");
       //update state
-      if (res.status === 200) {
-        set({
-          currentUser: null,
-          isAuthenticated: false,
-          error: null,
-          loading: false,
-        });
-      }
+      set({
+        currentUser: null,
+        isAuthenticated: false,
+        error: null,
+        loading: false,
+      });
     } catch (err) {
+      // Clear token even if API call fails
+      localStorage.removeItem("token");
       set({
         loading: false,
         isAuthenticated: false,
@@ -60,7 +65,7 @@ export const useAuth = create((set) => ({
   checkAuth: async () => {
     try {
       set({ loading: true });
-      const res = await axios.get("https://atp-24eg112c59-3.onrender.com/auth/check-auth", { withCredentials: true });
+      const res = await axiosInstance.get("/auth/check-auth");
 
       set({
         currentUser: res.data.payload,
@@ -70,6 +75,7 @@ export const useAuth = create((set) => ({
     } catch (err) {
       // If user is not logged in → do nothing
       if (err.response?.status === 401) {
+        localStorage.removeItem("token");
         set({
           currentUser: null,
           isAuthenticated: false,

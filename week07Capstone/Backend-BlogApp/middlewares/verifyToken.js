@@ -6,9 +6,10 @@ export const verifyToken = ( ...allowedRoles)=>{
     
     return (req,res,next)=>{
         // token verification logic
-    const token = req.cookies?.token;
-    console.log("Authorization Header:", req.headers.authorization);
-    console.log("Token:", token);
+    // Check cookie first, then Authorization header as fallback
+    // (cross-domain cookies are blocked by modern browsers)
+    const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
+    console.log("Token source:", req.cookies?.token ? "cookie" : req.headers.authorization ? "header" : "none");
     // if token is not valid
     if(!token){
         return res.status(401).json({message:"please login"});

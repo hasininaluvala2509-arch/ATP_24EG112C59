@@ -1,6 +1,6 @@
 import { useParams, useLocation, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { useAuth } from "../stores/authStore";
 import { useForm } from "react-hook-form";
 
@@ -48,9 +48,8 @@ function ArticleByID() {
       setLoading(true);
 
       try {
-        const res = await axios.get(
-          `https://atp-24eg112c59-3.onrender.com/user-api/articles`,
-          { withCredentials: true }
+        const res = await axiosInstance.get(
+          `/user-api/articles`
         );
 
         setArticle(res.data.payload);
@@ -82,13 +81,12 @@ function ArticleByID() {
     if (!window.confirm(confirmMsg)) return;
 
     try {
-      const res = await axios.patch(
-        `https://atp-24eg112c59-3.onrender.com/author-api/articles`,
+      const res = await axiosInstance.patch(
+        `/author-api/articles`,
         {
           articleId: article._id,
           isArticleActive: newStatus,
-        },
-        { withCredentials: true }
+        }
       );
 
       setArticle(res.data.payload);
@@ -111,10 +109,9 @@ function ArticleByID() {
   const addComment = async (commentObj) => {
     commentObj.articleId = article._id;
 
-    let res = await axios.put(
-      "https://atp-24eg112c59-3.onrender.com/user-api/articles",
-      commentObj,
-      { withCredentials: true }
+    let res = await axiosInstance.put(
+      "/user-api/articles",
+      commentObj
     );
 
     if (res.status === 200) {

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router";
 
 import {
@@ -34,10 +34,9 @@ function WriteArticles() {
     articleObj.author = currentUser._id;
 
     try {
-      let res = await axios.post(
-        "https://atp-24eg112c59-3.onrender.com/author-api/article",
-        articleObj,
-        { withCredentials: true }
+      let res = await axiosInstance.post(
+        "/author-api/article",
+        articleObj
       );
 
       if (res.status === 201) {
