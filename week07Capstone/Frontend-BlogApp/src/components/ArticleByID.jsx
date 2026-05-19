@@ -1,4 +1,4 @@
-import { useParams, useLocation, useNavigate } from "react-router";
+import { useParams, useLocation, useNavigate, Link } from "react-router";
 import { useEffect, useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useAuth } from "../stores/authStore";
@@ -42,19 +42,17 @@ function ArticleByID() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (article) return;
-
     const getArticle = async () => {
       setLoading(true);
 
       try {
         const res = await axiosInstance.get(
-          `/user-api/articles`
+          `/auth/articles/${id}`
         );
 
         setArticle(res.data.payload);
       } catch (err) {
-        setError(err.response?.data?.error);
+        setError(err.response?.data?.message || err.response?.data?.error || "Failed to load article.");
       } finally {
         setLoading(false);
       }
@@ -187,6 +185,18 @@ function ArticleByID() {
 
           </form>
 
+        </div>
+      )}
+
+      {/* Guest login call to action */}
+      {!user && (
+        <div className="mt-6 bg-[#f5f5f7] rounded-2xl p-5 text-center">
+          <p className="text-sm text-[#6e6e73]">
+            Want to join the discussion?{" "}
+            <Link to="/login" className="text-[#0066cc] font-medium hover:underline">
+              Log in to add a comment
+            </Link>
+          </p>
         </div>
       )}
 

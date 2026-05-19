@@ -5,6 +5,7 @@ import {hash,compare} from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { userApp } from './UserAPI.js'
 import { verifyToken } from '../middlewares/verifyToken.js'
+import { ArticleModel } from '../models/ArticleModel.js'
 
 export const commonApp = exp.Router()
 import {upload} from '../config/multer.js'
@@ -174,4 +175,29 @@ commonApp.put('/password', verifyToken("ADMIN", "AUTHOR", "USER"), async (req, r
 
     //send res
     res.status(200).json({ message: "Password updated" })
+})
+
+// Read all active articles (public)
+commonApp.get('/articles', async (req, res, next) => {
+    try {
+        const articlesList = await ArticleModel.find({ isArticleActive: true })
+            .populate("comment.user");
+        res.status(200).json({ message: "All available Articles", payload: articlesList });
+    } catch (err) {
+        next(err);
+    }
+})
+
+// Read a single active article (public)
+commonApp.get('/articles/:id', async (req, res, next) => {
+    try {
+        const article = await ArticleModel.findOne({ _id: req.params.id, isArticleActive: true })
+            .populate("comment.user");
+        if (!article) {
+            return res.status(404).json({ message: "Article not found" });
+        }
+        res.status(200).json({ message: "Article details", payload: article });
+    } catch (err) {
+        next(err);
+    }
 })

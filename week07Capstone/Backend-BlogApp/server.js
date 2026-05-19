@@ -23,7 +23,9 @@ app.use(cors({
       "https://atp-24-eg-112-c59-muil.vercel.app",
     ];
     const isAllowed = allowedPatterns.includes(origin) ||
-      /^https:\/\/atp-24-eg-112-c59-muil.*\.vercel\.app$/.test(origin);
+      /^https:\/\/atp-24-eg-112-c59-muil.*\.vercel\.app$/.test(origin) ||
+      /^http:\/\/localhost:\d+$/.test(origin) ||
+      /^http:\/\/127\.0\.0\.1:\d+$/.test(origin);
     if (isAllowed) {
       callback(null, origin);
     } else {
